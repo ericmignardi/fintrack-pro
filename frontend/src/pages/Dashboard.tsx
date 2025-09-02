@@ -1,5 +1,11 @@
+import TransactionList from "../components/TransactionList";
+
 function Dashboard() {
-  return <div>Dashboard</div>;
+  return (
+    <div>
+      <TransactionList />
+    </div>
+  );
 }
 
 export default Dashboard;

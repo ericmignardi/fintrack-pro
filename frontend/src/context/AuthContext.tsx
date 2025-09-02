@@ -17,8 +17,8 @@ type User = {
   email: string;
   firstName: string;
   lastName: string;
-  createdAt: string;
-  updatedAt: string;
+  createdAt: Date;
+  updatedAt: Date;
 };
 
 type RegisterFormData = {
