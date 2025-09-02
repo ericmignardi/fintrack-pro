@@ -1,7 +1,6 @@
 import prisma from "../config/database";
-import { Transaction } from "@prisma/client";
+import { Transaction, TransactionType } from "@prisma/client";
 
-// Fetch all transactions for a user
 export const findAllTransactions = async (userId: number) => {
   return await prisma.transaction.findMany({
     where: { userId },
@@ -10,45 +9,55 @@ export const findAllTransactions = async (userId: number) => {
   });
 };
 
-// Create a new transaction
 export const createTransaction = async (
   userId: number,
-  transactionData: Omit<
-    Transaction,
-    "id" | "userId" | "createdAt" | "updatedAt"
-  >
+  transactionData: {
+    categoryId?: number;
+    amount: number;
+    description?: string;
+    transactionDate: Date;
+    type: TransactionType;
+  }
 ) => {
   return await prisma.transaction.create({
-    data: { ...transactionData, userId },
+    data: {
+      ...transactionData,
+      userId,
+    },
     include: { category: true },
   });
 };
 
-// Update a transaction (verify ownership in controller)
 export const updateTransaction = async (
   id: number,
-  transactionData: Partial<
-    Pick<
-      Transaction,
-      "categoryId" | "amount" | "description" | "transactionDate" | "type"
-    >
-  >
+  userId: number,
+  transactionData: {
+    categoryId?: number;
+    amount?: number;
+    description?: string;
+    transactionDate?: Date;
+    type?: TransactionType;
+  }
 ) => {
   return await prisma.transaction.update({
-    where: { id },
+    where: {
+      id,
+      userId, // Security: ensures user owns the transaction
+    },
     data: transactionData,
     include: { category: true },
   });
 };
 
-// Delete a transaction (verify ownership in controller)
-export const deleteTransaction = async (id: number) => {
+export const deleteTransaction = async (id: number, userId: number) => {
   return await prisma.transaction.delete({
-    where: { id },
+    where: {
+      id,
+      userId, // Security: ensures user owns the transaction
+    },
   });
 };
 
-// Find transactions by category
 export const findTransactionsByCategory = async (
   userId: number,
   categoryId: number
@@ -57,5 +66,12 @@ export const findTransactionsByCategory = async (
     where: { userId, categoryId },
     include: { category: true },
     orderBy: { transactionDate: "desc" },
+  });
+};
+
+export const findTransactionById = async (id: number, userId: number) => {
+  return await prisma.transaction.findFirst({
+    where: { id, userId },
+    include: { category: true },
   });
 };

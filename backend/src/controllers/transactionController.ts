@@ -14,12 +14,11 @@ export const findAllTransactions = async (req: Request, res: Response) => {
 
   try {
     const transactions = await transactionService.findAllTransactions(userId);
-    if (!transactions.length)
-      return res.status(404).json({ error: "No transactions found." });
 
-    res
-      .status(200)
-      .json({ message: "Transactions retrieved successfully.", transactions });
+    res.status(200).json({
+      message: "Transactions retrieved successfully.",
+      transactions,
+    });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Failed to retrieve transactions." });
@@ -32,18 +31,25 @@ export const createTransaction = async (req: Request, res: Response) => {
 
   const { categoryId, amount, description, transactionDate, type } = req.body;
 
+  if (!amount || !type || !transactionDate) {
+    return res
+      .status(400)
+      .json({ error: "Amount, type, and transaction date are required." });
+  }
+
   try {
     const transaction = await transactionService.createTransaction(userId, {
       categoryId,
       amount,
       description,
-      transactionDate,
+      transactionDate: new Date(transactionDate),
       type,
     });
 
-    res
-      .status(201)
-      .json({ message: "Transaction created successfully.", transaction });
+    res.status(201).json({
+      message: "Transaction created successfully.",
+      transaction,
+    });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Failed to create transaction." });
@@ -58,28 +64,29 @@ export const updateTransaction = async (req: Request, res: Response) => {
   const { categoryId, amount, description, transactionDate, type } = req.body;
 
   try {
-    // Verify transaction ownership
-    const existing = await transactionService.findAllTransactions(userId);
-    const transaction = existing.find((t) => t.id === Number(id));
-    if (!transaction)
-      return res.status(404).json({ error: "Transaction not found." });
+    const updated = await transactionService.updateTransaction(
+      Number(id),
+      userId,
+      {
+        categoryId,
+        amount,
+        description,
+        transactionDate: transactionDate
+          ? new Date(transactionDate)
+          : undefined,
+        type,
+      }
+    );
 
-    const updated = await transactionService.updateTransaction(Number(id), {
-      categoryId,
-      amount,
-      description,
-      transactionDate,
-      type,
+    res.status(200).json({
+      message: "Transaction updated successfully.",
+      transaction: updated,
     });
-
-    res
-      .status(200)
-      .json({
-        message: "Transaction updated successfully.",
-        transaction: updated,
-      });
-  } catch (error) {
+  } catch (error: any) {
     console.error(error);
+    if (error.code === "P2025") {
+      return res.status(404).json({ error: "Transaction not found." });
+    }
     res.status(500).json({ error: "Failed to update transaction." });
   }
 };
@@ -91,17 +98,13 @@ export const deleteTransaction = async (req: Request, res: Response) => {
   const { id } = req.params;
 
   try {
-    // Verify ownership
-    const existing = await transactionService.findAllTransactions(userId);
-    const transaction = existing.find((t) => t.id === Number(id));
-    if (!transaction)
-      return res.status(404).json({ error: "Transaction not found." });
-
-    await transactionService.deleteTransaction(Number(id));
-
+    await transactionService.deleteTransaction(Number(id), userId);
     res.status(200).json({ message: "Transaction deleted successfully." });
-  } catch (error) {
+  } catch (error: any) {
     console.error(error);
+    if (error.code === "P2025") {
+      return res.status(404).json({ error: "Transaction not found." });
+    }
     res.status(500).json({ error: "Failed to delete transaction." });
   }
 };
@@ -120,14 +123,11 @@ export const findTransactionsByCategory = async (
       userId,
       Number(categoryId)
     );
-    if (!transactions.length)
-      return res
-        .status(404)
-        .json({ error: "No transactions found for this category." });
 
-    res
-      .status(200)
-      .json({ message: "Transactions retrieved successfully.", transactions });
+    res.status(200).json({
+      message: "Transactions retrieved successfully.",
+      transactions,
+    });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Failed to retrieve transactions." });

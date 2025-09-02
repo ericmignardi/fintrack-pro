@@ -20,9 +20,9 @@ interface Category {
 interface Transaction {
   id: number;
   amount: number;
-  description: string;
+  description?: string;
   type: "INCOME" | "EXPENSE";
-  category: Category;
+  category?: Category;
   transactionDate: string;
   createdAt: string;
   updatedAt: string;
@@ -37,10 +37,10 @@ export const TransactionProvider = ({ children }: { children: ReactNode }) => {
   const [isTransactionsLoading, setIsTransactionsLoading] =
     useState<boolean>(false);
 
-  const findAllTransactions = async (userId: number): Promise<boolean> => {
+  const findAllTransactions = async (): Promise<boolean> => {
     setIsTransactionsLoading(true);
     try {
-      const response = await axiosInstance.get(`/transactions/${userId}`);
+      const response = await axiosInstance.get(`/transactions`); // Remove userId
       if (response.data.transactions) {
         setTransactions(response.data.transactions);
         return true;

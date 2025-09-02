@@ -30,7 +30,7 @@ export const createCategory = async (
   });
 };
 
-// Optional: Create default categories for new users
+// Create default categories for new users
 export const createDefaultCategories = async (userId: number) => {
   const defaultCategories = [
     // Income categories
@@ -52,7 +52,6 @@ export const createDefaultCategories = async (userId: number) => {
       color: "#F59E0B",
       icon: "trending-up",
     },
-
     // Expense categories
     {
       name: "Groceries",
