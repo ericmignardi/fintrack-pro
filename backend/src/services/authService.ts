@@ -1,6 +1,7 @@
 import prisma from "../config/database";
 import bcryptjs from "bcryptjs";
 import { generateToken } from "../utils/token";
+import { createDefaultCategories } from "./categoryService";
 
 export const register = async (
   email: string,
@@ -25,6 +26,10 @@ export const register = async (
       lastName,
     },
   });
+
+  // Create default categories for the new user
+  await createDefaultCategories(user.id);
+
   const token = generateToken(user);
   return { token, user };
 };

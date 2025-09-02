@@ -3,7 +3,9 @@ import express, { Application } from "express";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import prisma from "./config/database";
-import authRoutes from "./routes/authRoute";
+import authRoutes from "./routes/authRoutes";
+import transactionRoutes from "./routes/transactionRoutes";
+import categoryRoutes from "./routes/categoryRoutes";
 
 dotenv.config();
 
@@ -20,6 +22,8 @@ app.use(express.json());
 app.use(cookieParser());
 
 app.use("/api/auth", authRoutes);
+app.use("/api/transactions", transactionRoutes);
+app.use("/api/categories", categoryRoutes);
 
 const startServer = async () => {
   try {
