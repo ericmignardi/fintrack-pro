@@ -127,3 +127,29 @@ export const findTransactionsByCategory = async (req, res) => {
     res.status(500).json({ error: "Failed to retrieve transactions." });
   }
 };
+
+export const findTransactionsById = async (req, res) => {
+  const userId = getUserId(req);
+  if (!userId) return res.status(401).json({ error: "User ID is required." });
+
+  const { id } = req.params;
+
+  try {
+    const transaction = await transactionService.findTransactionById(
+      userId,
+      Number(id)
+    );
+
+    if (!transaction) {
+      return res.status(404).json({ error: "Transaction not found." });
+    }
+
+    res.status(200).json({
+      message: "Transaction retrieved successfully.",
+      transaction,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Failed to retrieve transaction." });
+  }
+};

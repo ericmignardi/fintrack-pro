@@ -6,6 +6,8 @@ import prisma from "./config/database.js";
 import authRoutes from "./routes/authRoutes.js";
 import transactionRoutes from "./routes/transactionRoutes.js";
 import categoryRoutes from "./routes/categoryRoutes.js";
+import budgetRoutes from "./routes/budgetRoutes.js";
+import goalRoutes from "./routes/goalRoutes.js";
 
 dotenv.config();
 
@@ -24,6 +26,8 @@ app.use(cookieParser());
 app.use("/api/auth", authRoutes);
 app.use("/api/transactions", transactionRoutes);
 app.use("/api/categories", categoryRoutes);
+app.use("/api/budgets", budgetRoutes);
+app.use("/api/goals", goalRoutes);
 
 const startServer = async () => {
   try {

@@ -1,6 +1,7 @@
 import { Router } from "express";
 import {
   findAllTransactions,
+  findTransactionsById,
   createTransaction,
   updateTransaction,
   deleteTransaction,
@@ -12,6 +13,7 @@ const router = Router();
 
 router.get("/", authMiddleware, findAllTransactions);
 router.get("/category/:categoryId", authMiddleware, findTransactionsByCategory);
+router.get("/:id", authMiddleware, findTransactionsById);
 router.post("/", authMiddleware, createTransaction);
 router.put("/:id", authMiddleware, updateTransaction);
 router.delete("/:id", authMiddleware, deleteTransaction);

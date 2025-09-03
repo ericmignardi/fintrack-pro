@@ -18,8 +18,8 @@ export const TransactionProvider = ({ children }) => {
         setTransactions(response.data.transactions);
         return true;
       } else {
-        toast.error("No transactions found.");
-        return false;
+        setTransactions([]);
+        return true;
       }
     } catch (error) {
       console.error(error);
@@ -39,6 +39,7 @@ export const TransactionProvider = ({ children }) => {
             ? [...prev, response.data.transaction]
             : [response.data.transaction]
         );
+        toast.success("Transaction created successfully!");
         return true;
       } else {
         toast.error("Failed to create transaction.");
