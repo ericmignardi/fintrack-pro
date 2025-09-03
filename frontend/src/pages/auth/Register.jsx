@@ -3,25 +3,26 @@ import { useAuth } from "../../hooks/useAuth";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 
-function Login() {
+function Register() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState<string | null>(null);
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [error, setError] = useState(null);
 
-  const { user, login, isLoggingIn } = useAuth();
-
+  const { user, register, isRegistering } = useAuth();
   const navigate = useNavigate();
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setError(null);
     try {
-      const success = await login({ email, password });
+      const success = await register({ email, password, firstName, lastName });
       if (success) {
         navigate("/dashboard");
       } else {
-        setError("Invalid email or password.");
-        toast.error("Login failed.");
+        setError("Registration failed. Please check your input.");
+        toast.error("Registration failed.");
       }
     } catch (err) {
       setError("An unexpected error occurred.");
@@ -37,33 +38,43 @@ function Login() {
 
   return (
     <div>
-      <h1>Login</h1>
+      <h1>Register</h1>
       <form onSubmit={handleSubmit}>
-        <label htmlFor="email">Email</label>
+        <label>Email</label>
         <input
           type="email"
-          id="email"
-          name="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
         />
-        <label htmlFor="password">Password</label>
+        <label>Password</label>
         <input
           type="password"
-          id="password"
-          name="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
         />
+        <label>First Name</label>
+        <input
+          type="text"
+          value={firstName}
+          onChange={(e) => setFirstName(e.target.value)}
+          required
+        />
+        <label>Last Name</label>
+        <input
+          type="text"
+          value={lastName}
+          onChange={(e) => setLastName(e.target.value)}
+          required
+        />
         {error && <p className="text-red-600">{error}</p>}
-        <button disabled={isLoggingIn} type="submit">
-          {isLoggingIn ? "Logging in..." : "Login"}
+        <button disabled={isRegistering} type="submit">
+          {isRegistering ? "Registering..." : "Register"}
         </button>
       </form>
     </div>
   );
 }
 
-export default Login;
+export default Register;

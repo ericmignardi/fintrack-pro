@@ -3,7 +3,7 @@ import { TransactionContext } from "../context/TransactionContext";
 
 export const useTransaction = () => {
   const context = useContext(TransactionContext);
-  if (context === undefined) {
+  if (!context) {
     throw new Error("useTransaction must be used within a TransactionProvider");
   }
   return context;
