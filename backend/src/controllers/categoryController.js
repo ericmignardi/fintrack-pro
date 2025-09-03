@@ -1,14 +1,12 @@
-import { Request, Response } from "express";
-import * as categoryService from "../services/categoryService";
+import * as categoryService from "../services/categoryService.js";
 
-// Helper to check user (consistent with transaction controller)
-const getUserId = (req: Request): number | null => {
+const getUserId = (req) => {
   const user = req.user;
   if (!user || !("id" in user)) return null;
   return user.id;
 };
 
-export const getAllCategories = async (req: Request, res: Response) => {
+export const getAllCategories = async (req, res) => {
   const userId = getUserId(req);
   if (!userId) return res.status(401).json({ error: "User ID is required." });
 
@@ -18,13 +16,13 @@ export const getAllCategories = async (req: Request, res: Response) => {
       message: "Categories retrieved successfully.",
       categories,
     });
-  } catch (error: any) {
+  } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Failed to retrieve categories." });
   }
 };
 
-export const createCategory = async (req: Request, res: Response) => {
+export const createCategory = async (req, res) => {
   const userId = getUserId(req);
   const { name, type, color, icon } = req.body;
 
@@ -46,7 +44,7 @@ export const createCategory = async (req: Request, res: Response) => {
       message: "Category created successfully.",
       category,
     });
-  } catch (error: any) {
+  } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Failed to create category." });
   }

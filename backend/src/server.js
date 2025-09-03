@@ -1,16 +1,16 @@
 import cors from "cors";
-import express, { Application } from "express";
+import express from "express";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
-import prisma from "./config/database";
-import authRoutes from "./routes/authRoutes";
-import transactionRoutes from "./routes/transactionRoutes";
-import categoryRoutes from "./routes/categoryRoutes";
+import prisma from "./config/database.js";
+import authRoutes from "./routes/authRoutes.js";
+import transactionRoutes from "./routes/transactionRoutes.js";
+import categoryRoutes from "./routes/categoryRoutes.js";
 
 dotenv.config();
 
-const PORT: number = parseInt(process.env.PORT || "5000");
-const app: Application = express();
+const PORT = parseInt(process.env.PORT || "5000");
+const app = express();
 
 app.use(
   cors({

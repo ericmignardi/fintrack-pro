@@ -1,7 +1,6 @@
-import prisma from "../config/database";
-import { Transaction, TransactionType } from "@prisma/client";
+import prisma from "../config/database.js";
 
-export const findAllTransactions = async (userId: number) => {
+export const findAllTransactions = async (userId) => {
   return await prisma.transaction.findMany({
     where: { userId },
     include: { category: true },
@@ -9,16 +8,7 @@ export const findAllTransactions = async (userId: number) => {
   });
 };
 
-export const createTransaction = async (
-  userId: number,
-  transactionData: {
-    categoryId?: number;
-    amount: number;
-    description?: string;
-    transactionDate: Date;
-    type: TransactionType;
-  }
-) => {
+export const createTransaction = async (userId, transactionData) => {
   return await prisma.transaction.create({
     data: {
       ...transactionData,
@@ -28,17 +18,7 @@ export const createTransaction = async (
   });
 };
 
-export const updateTransaction = async (
-  id: number,
-  userId: number,
-  transactionData: {
-    categoryId?: number;
-    amount?: number;
-    description?: string;
-    transactionDate?: Date;
-    type?: TransactionType;
-  }
-) => {
+export const updateTransaction = async (id, userId, transactionData) => {
   return await prisma.transaction.update({
     where: {
       id,
@@ -49,7 +29,7 @@ export const updateTransaction = async (
   });
 };
 
-export const deleteTransaction = async (id: number, userId: number) => {
+export const deleteTransaction = async (id, userId) => {
   return await prisma.transaction.delete({
     where: {
       id,
@@ -58,10 +38,7 @@ export const deleteTransaction = async (id: number, userId: number) => {
   });
 };
 
-export const findTransactionsByCategory = async (
-  userId: number,
-  categoryId: number
-) => {
+export const findTransactionsByCategory = async (userId, categoryId) => {
   return await prisma.transaction.findMany({
     where: { userId, categoryId },
     include: { category: true },
@@ -69,7 +46,7 @@ export const findTransactionsByCategory = async (
   });
 };
 
-export const findTransactionById = async (id: number, userId: number) => {
+export const findTransactionById = async (id, userId) => {
   return await prisma.transaction.findFirst({
     where: { id, userId },
     include: { category: true },

@@ -5,8 +5,8 @@ import {
   updateTransaction,
   deleteTransaction,
   findTransactionsByCategory,
-} from "../controllers/transactionController";
-import { authMiddleware } from "../middleware/authMiddleware";
+} from "../controllers/transactionController.js";
+import { authMiddleware } from "../middleware/authMiddleware.js";
 
 const router = Router();
 

@@ -1,14 +1,9 @@
-import prisma from "../config/database";
+import prisma from "../config/database.js";
 import bcryptjs from "bcryptjs";
-import { generateToken } from "../utils/token";
-import { createDefaultCategories } from "./categoryService";
+import { generateToken } from "../utils/token.js";
+import { createDefaultCategories } from "./categoryService.js";
 
-export const register = async (
-  email: string,
-  password: string,
-  firstName: string,
-  lastName: string
-) => {
+export const register = async (email, password, firstName, lastName) => {
   const existingUser = await prisma.user.findUnique({
     where: { email },
   });
@@ -34,7 +29,7 @@ export const register = async (
   return { token, user };
 };
 
-export const login = async (email: string, password: string) => {
+export const login = async (email, password) => {
   const user = await prisma.user.findUnique({
     where: { email },
   });
