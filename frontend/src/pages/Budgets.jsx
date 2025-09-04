@@ -1,7 +1,13 @@
-import React from "react";
+import BudgetList from "../components/BudgetList";
+import BudgetForm from "../components/forms/BudgetForm";
 
 function Budgets() {
-  return <div>Budgets</div>;
+  return (
+    <div>
+      <BudgetForm />
+      <BudgetList />
+    </div>
+  );
 }
 
 export default Budgets;

@@ -1,6 +1,6 @@
+import { useEffect } from "react";
 import TransactionCard from "./TransactionCard";
 import { useTransaction } from "../hooks/useTransaction";
-import { useEffect } from "react";
 
 function TransactionList() {
   const { transactions, findAllTransactions, isTransactionsLoading } =
@@ -8,7 +8,7 @@ function TransactionList() {
 
   useEffect(() => {
     findAllTransactions();
-  }, []);
+  }, [findAllTransactions]);
 
   if (isTransactionsLoading) return <div>Loading transactions...</div>;
   if (!transactions || transactions.length === 0)
@@ -16,10 +16,14 @@ function TransactionList() {
 
   return (
     <div>
-      <h2>Your Transactions</h2>
-      {transactions.map((transaction) => (
-        <TransactionCard key={transaction.id} transaction={transaction} />
-      ))}
+      <h2>Transactions</h2>
+      <ul>
+        {transactions?.map((transaction) => (
+          <li key={transaction.id}>
+            <TransactionCard transaction={transaction} />
+          </li>
+        ))}
+      </ul>
     </div>
   );
 }
