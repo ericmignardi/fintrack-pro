@@ -17,7 +17,6 @@ export const BudgetProvider = ({ children }) => {
     try {
       const response = await axiosInstance.get("/budgets");
       setBudgets(response.data.budgets || []);
-      toast.success("Budgets retrieved successfully!");
       return true;
     } catch (error) {
       console.error(error);
@@ -34,7 +33,6 @@ export const BudgetProvider = ({ children }) => {
       const response = await axiosInstance.get(`/budgets/${budgetId}`);
       if (response.data.budget) {
         setBudget(response.data.budget);
-        toast.success("Budget retrieved successfully!");
         return true;
       } else {
         toast.error("Failed to retrieve budget.");
@@ -134,13 +132,9 @@ export const BudgetProvider = ({ children }) => {
     budget,
     setBudget,
     isBudgetsLoading,
-    setIsBudgetsLoading,
     isCreatingBudget,
-    setIsCreatingBudget,
     isUpdatingBudget,
-    setIsUpdatingBudget,
     isDeletingBudget,
-    setIsDeletingBudget,
     findAll,
     findBudgetById,
     createBudget,

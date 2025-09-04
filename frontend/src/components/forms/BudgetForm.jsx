@@ -9,7 +9,7 @@ function BudgetForm() {
     categoryId: "",
     name: "",
     budgetAmount: "",
-    period: "",
+    period: "MONTHLY",
     startDate: "",
     endDate: "",
   });
@@ -38,7 +38,7 @@ function BudgetForm() {
         categoryId: "",
         name: "",
         budgetAmount: "",
-        period: "",
+        period: "MONTHLY",
         startDate: "",
         endDate: "",
       });
@@ -53,6 +53,7 @@ function BudgetForm() {
         name="categoryId"
         value={formData.categoryId}
         onChange={handleChange}
+        required
       >
         <option value="">Select category</option>
         {categories?.map((category) => (
@@ -75,6 +76,7 @@ function BudgetForm() {
       <label htmlFor="budgetAmount">Budget Amount</label>
       <input
         type="number"
+        step="0.01"
         id="budgetAmount"
         name="budgetAmount"
         value={formData.budgetAmount}
