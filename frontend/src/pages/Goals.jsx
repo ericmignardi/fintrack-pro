@@ -1,7 +1,13 @@
-import React from "react";
+import GoalsList from "../components/GoalsList";
+import GoalForm from "../components/forms/GoalForm";
 
 function Goals() {
-  return <div>Goals</div>;
+  return (
+    <div>
+      <GoalForm />
+      <GoalsList />
+    </div>
+  );
 }
 
 export default Goals;

@@ -18,8 +18,6 @@ function BudgetCard({ budget }) {
 
   return (
     <div>
-      <div>{budget.id}</div>
-      <div>{budget.userId}</div>
       <div>
         {budget.categoryId} - {categoryName}
       </div>
