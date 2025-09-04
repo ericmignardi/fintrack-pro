@@ -22,11 +22,22 @@ function GoalForm() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await createGoal({
+    const success = await createGoal({
       ...formData,
       targetAmount: parseFloat(formData.targetAmount),
       currentAmount: parseFloat(formData.currentAmount),
     });
+
+    if (success) {
+      setFormData({
+        title: "",
+        description: "",
+        targetAmount: "",
+        currentAmount: "0",
+        targetDate: "",
+        status: "ACTIVE",
+      });
+    }
   };
 
   return (

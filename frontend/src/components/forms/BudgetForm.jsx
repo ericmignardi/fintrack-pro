@@ -28,10 +28,21 @@ function BudgetForm() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await createBudget({
+    const success = await createBudget({
       ...formData,
       budgetAmount: parseFloat(formData.budgetAmount),
     });
+
+    if (success) {
+      setFormData({
+        categoryId: "",
+        name: "",
+        budgetAmount: "",
+        period: "",
+        startDate: "",
+        endDate: "",
+      });
+    }
   };
 
   return (

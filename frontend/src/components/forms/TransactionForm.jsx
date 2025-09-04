@@ -27,10 +27,20 @@ function TransactionForm() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await createTransaction({
+    const success = await createTransaction({
       ...formData,
       amount: parseFloat(formData.amount),
     });
+
+    if (success) {
+      setFormData({
+        categoryId: "",
+        amount: "",
+        description: "",
+        transactionDate: "",
+        type: "",
+      });
+    }
   };
 
   return (
