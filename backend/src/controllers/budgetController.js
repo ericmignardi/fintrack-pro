@@ -129,27 +129,3 @@ export const deleteBudget = async (req, res) => {
     res.status(500).json({ error: "Failed to delete budget." });
   }
 };
-
-// enum BudgetPeriod {
-//   WEEKLY
-//   MONTHLY
-//   YEARLY
-// }
-
-// model Budget {
-//   id           Int          @id @default(autoincrement())
-//   userId       Int          @map("user_id")
-//   categoryId   Int          @map("category_id")
-//   name         String
-//   budgetAmount Decimal      @map("budget_amount") @db.Decimal(10, 2)
-//   period       BudgetPeriod @default(MONTHLY)
-//   startDate    DateTime     @map("start_date") @db.Date
-//   endDate      DateTime     @map("end_date") @db.Date
-//   createdAt    DateTime     @default(now()) @map("created_at")
-
-//   // Relations
-//   user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-//   category Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
-
-//   @@map("budgets")
-// }

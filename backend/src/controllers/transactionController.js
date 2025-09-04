@@ -128,7 +128,7 @@ export const findTransactionsByCategory = async (req, res) => {
   }
 };
 
-export const findTransactionsById = async (req, res) => {
+export const findTransactionById = async (req, res) => {
   const userId = getUserId(req);
   if (!userId) return res.status(401).json({ error: "User ID is required." });
 

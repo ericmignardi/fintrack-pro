@@ -1,8 +1,10 @@
 import { useEffect } from "react";
 import { useTransaction } from "../../hooks/useTransaction";
+import { useCategory } from "../../hooks/useCategory";
 
 function TransactionForm() {
-  const { createTransaction, categories, findAllCategories } = useTransaction();
+  const { createTransaction } = useTransaction();
+  const { categories, findAllCategories } = useCategory();
 
   useEffect(() => {
     findAllCategories();
