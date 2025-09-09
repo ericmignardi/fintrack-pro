@@ -1,3 +1,4 @@
+@import url("https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,100..900;1,100..900&display=swap");
 @import "tailwindcss";
 
 :root {
@@ -10,3 +11,24 @@
   --light-gray: #f9fafb;
   --dark-gray: #111827;
 }
+
+body {
+  font-family: "Raleway", sans-serif;
+  background-color: var(--light-gray);
+  color: var(--dark-gray);
+}
+
+/* @layer components {
+  .btn-primary {
+    @apply;
+  }
+  .btn-primary:hover {
+    @apply;
+  }
+  .card {
+    @apply;
+  }
+} */
+
+/* @layer utilities {
+} */

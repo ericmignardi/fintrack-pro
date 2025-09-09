@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "../../hooks/useAuth";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
+import AuthLayout from "../../components/layout/AuthLayout";
 
 function Register() {
   const [email, setEmail] = useState("");
@@ -19,7 +20,7 @@ function Register() {
     try {
       const success = await register({ email, password, firstName, lastName });
       if (success) {
-        navigate("/dashboard");
+        navigate("/");
       } else {
         setError("Registration failed. Please check your input.");
         toast.error("Registration failed.");
@@ -32,48 +33,74 @@ function Register() {
 
   useEffect(() => {
     if (user) {
-      navigate("/dashboard");
+      navigate("/");
     }
   }, [user, navigate]);
 
   return (
-    <div>
-      <h1>Register</h1>
-      <form onSubmit={handleSubmit}>
-        <label>Email</label>
-        <input
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-        />
-        <label>Password</label>
-        <input
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        />
-        <label>First Name</label>
+    <AuthLayout
+      title="Create an account"
+      subtitle="Please enter your details"
+      footer={
+        <>
+          Already have an account?{" "}
+          <Link
+            to="/login"
+            className="text-[var(--primary-blue)] hover:underline"
+          >
+            Log in
+          </Link>
+        </>
+      }
+    >
+      <form onSubmit={handleSubmit} className="flex flex-col gap-4">
         <input
           type="text"
           value={firstName}
           onChange={(e) => setFirstName(e.target.value)}
           required
+          placeholder="First name"
+          className="text-sm font-medium border border-[var(--neutral-gray)]/50 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[var(--primary-blue)]"
         />
-        <label>Last Name</label>
+
         <input
           type="text"
           value={lastName}
           onChange={(e) => setLastName(e.target.value)}
           required
+          placeholder="Last name"
+          className="text-sm font-medium border border-[var(--neutral-gray)]/50 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[var(--primary-blue)]"
         />
-        {error && <p className="text-red-600">{error}</p>}
-        <button disabled={isRegistering} type="submit">
+
+        <input
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
+          placeholder="Email address"
+          className="text-sm font-medium border border-[var(--neutral-gray)]/50 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[var(--primary-blue)]"
+        />
+
+        <input
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          required
+          placeholder="Password"
+          className="text-sm font-medium border border-[var(--neutral-gray)]/50 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[var(--primary-blue)]"
+        />
+
+        {error && <p className="text-[var(--danger-red)] text-sm">{error}</p>}
+
+        <button
+          className="text-sm font-medium rounded-lg text-white bg-[var(--primary-blue)] hover:bg-[var(--secondary-blue)] cursor-pointer py-3 transition"
+          disabled={isRegistering}
+          type="submit"
+        >
           {isRegistering ? "Registering..." : "Register"}
         </button>
       </form>
-    </div>
+    </AuthLayout>
   );
 }
 

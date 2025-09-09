@@ -1,37 +1,28 @@
-import { Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import Login from "./pages/auth/Login";
 import Register from "./pages/auth/Register";
 import Dashboard from "./pages/Dashboard";
 import { Toaster } from "react-hot-toast";
-import { useAuth } from "./hooks/useAuth";
 import Transactions from "./pages/Transactions";
 import Budgets from "./pages/Budgets";
 import Goals from "./pages/Goals";
+import ProtectedLayout from "./components/layout/ProtectedLayout";
 
 function App() {
-  const { user } = useAuth();
-
   return (
     <>
       <Routes>
+        {/* Public routes */}
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route
-          path="/dashboard"
-          element={user ? <Dashboard /> : <Navigate to="/login" />}
-        />
-        <Route
-          path="/transactions"
-          element={user ? <Transactions /> : <Navigate to="/login" />}
-        />
-        <Route
-          path="/budgets"
-          element={user ? <Budgets /> : <Navigate to="/login" />}
-        />
-        <Route
-          path="/goals"
-          element={user ? <Goals /> : <Navigate to="/login" />}
-        />
+
+        {/* Protected routes */}
+        <Route element={<ProtectedLayout />}>
+          <Route path="/" element={<Dashboard />} />
+          <Route path="/transactions" element={<Transactions />} />
+          <Route path="/budgets" element={<Budgets />} />
+          <Route path="/goals" element={<Goals />} />
+        </Route>
       </Routes>
       <Toaster />
     </>
