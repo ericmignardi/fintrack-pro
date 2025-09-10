@@ -1,6 +1,6 @@
 function AuthLayout({ title, subtitle, children, footer }) {
   return (
-    <div className="h-screen flex justify-center items-center bg-[var(--light-gray)]">
+    <div className="h-screen flex justify-center items-center">
       <div className="flex flex-col justify-center gap-8 rounded-xl bg-white border border-[var(--neutral-gray)]/50 shadow-lg p-10 w-full max-w-sm sm:max-w-md md:max-w-lg">
         {/* Header */}
         <div className="flex flex-col gap-2">
