@@ -5,7 +5,7 @@ import toast from "react-hot-toast";
 export const TransactionContext = createContext();
 
 export const TransactionProvider = ({ children }) => {
-  const [transactions, setTransactions] = useState(null);
+  const [transactions, setTransactions] = useState([]);
   const [transaction, setTransaction] = useState(null);
   const [isTransactionsLoading, setIsTransactionsLoading] = useState(false);
   const [isCreatingTransaction, setIsCreatingTransaction] = useState(false);
@@ -27,22 +27,20 @@ export const TransactionProvider = ({ children }) => {
     }
   };
 
-  const createTransaction = async (transaction) => {
+  const createTransaction = async (transactionData) => {
     setIsCreatingTransaction(true);
     try {
-      const response = await axiosInstance.post("/transactions", transaction);
+      const response = await axiosInstance.post(
+        "/transactions",
+        transactionData
+      );
       if (response.data.transaction) {
-        setTransactions((prev) =>
-          prev
-            ? [...prev, response.data.transaction]
-            : [response.data.transaction]
-        );
+        setTransactions((prev) => [...prev, response.data.transaction]);
         toast.success("Transaction created successfully!");
         return true;
-      } else {
-        toast.error("Failed to create transaction.");
-        return false;
       }
+      toast.error("Failed to create transaction.");
+      return false;
     } catch (error) {
       console.error(error);
       toast.error("Failed to create transaction.");
@@ -59,7 +57,6 @@ export const TransactionProvider = ({ children }) => {
         `/transactions/category/${categoryId}`
       );
       setTransactions(response.data.transactions || []);
-      toast.success("Transactions by category retrieved successfully!");
       return true;
     } catch (error) {
       console.error(error);
@@ -78,12 +75,10 @@ export const TransactionProvider = ({ children }) => {
       );
       if (response.data.transaction) {
         setTransaction(response.data.transaction);
-        toast.success("Transaction retrieved successfully!");
         return true;
-      } else {
-        toast.error("Failed to retrieve transaction.");
-        return false;
       }
+      toast.error("Failed to retrieve transaction.");
+      return false;
     } catch (error) {
       console.error(error);
       toast.error("Failed to retrieve transaction by ID.");
@@ -102,21 +97,18 @@ export const TransactionProvider = ({ children }) => {
       );
       if (response.data.transaction) {
         setTransactions((prev) =>
-          prev
-            ? prev.map((t) =>
-                t.id === response.data.transaction.id
-                  ? response.data.transaction
-                  : t
-              )
-            : [response.data.transaction]
+          prev.map((t) =>
+            t.id === response.data.transaction.id
+              ? response.data.transaction
+              : t
+          )
         );
         setTransaction(response.data.transaction);
         toast.success("Transaction successfully updated!");
         return true;
-      } else {
-        toast.error("Failed to update transaction.");
-        return false;
       }
+      toast.error("Failed to update transaction.");
+      return false;
     } catch (error) {
       console.error(error);
       toast.error("Failed to update transaction.");
@@ -133,16 +125,13 @@ export const TransactionProvider = ({ children }) => {
         `/transactions/${transactionId}`
       );
       if (response.data.message === "Transaction deleted successfully.") {
-        setTransactions((prev) =>
-          prev ? prev.filter((t) => t.id !== transactionId) : []
-        );
+        setTransactions((prev) => prev.filter((t) => t.id !== transactionId));
         setTransaction(null);
         toast.success("Transaction deleted successfully!");
         return true;
-      } else {
-        toast.error("Failed to delete transaction");
-        return false;
       }
+      toast.error("Failed to delete transaction");
+      return false;
     } catch (error) {
       console.error(error);
       toast.error("Failed to delete transaction.");
@@ -154,9 +143,7 @@ export const TransactionProvider = ({ children }) => {
 
   const value = {
     transactions,
-    setTransactions,
     transaction,
-    setTransaction,
     findAllTransactions,
     findTransactionsByCategory,
     findTransactionById,
@@ -164,13 +151,9 @@ export const TransactionProvider = ({ children }) => {
     updateTransaction,
     deleteTransaction,
     isTransactionsLoading,
-    setIsTransactionsLoading,
     isCreatingTransaction,
-    setIsCreatingTransaction,
     isUpdatingTransaction,
-    setIsUpdatingTransaction,
     isDeletingTransaction,
-    setIsDeletingTransaction,
   };
 
   return (

@@ -5,18 +5,16 @@ import toast from "react-hot-toast";
 export const CategoryContext = createContext();
 
 export const CategoryProvider = ({ children }) => {
-  const [categories, setCategories] = useState(null);
+  const [categories, setCategories] = useState([]);
   const [category, setCategory] = useState(null);
   const [isCategoriesLoading, setIsCategoriesLoading] = useState(false);
   const [isCreatingCategory, setIsCreatingCategory] = useState(false);
 
-  // Fetch all categories
   const findAllCategories = async () => {
     setIsCategoriesLoading(true);
     try {
       const response = await axiosInstance.get("/categories");
       setCategories(response.data.categories || []);
-      toast.success("Categories retrieved successfully!");
       return true;
     } catch (error) {
       console.error(error);
@@ -27,15 +25,12 @@ export const CategoryProvider = ({ children }) => {
     }
   };
 
-  // Create category
-  const createCategory = async (category) => {
+  const createCategory = async (categoryData) => {
     setIsCreatingCategory(true);
     try {
-      const response = await axiosInstance.post("/categories", category);
+      const response = await axiosInstance.post("/categories", categoryData);
       if (response.data.category) {
-        setCategories((prev) =>
-          prev ? [...prev, response.data.category] : [response.data.category]
-        );
+        setCategories((prev) => [...prev, response.data.category]);
         setCategory(response.data.category);
         toast.success("Category created successfully!");
         return true;
@@ -54,15 +49,11 @@ export const CategoryProvider = ({ children }) => {
 
   const value = {
     categories,
-    setCategories,
     category,
-    setCategory,
     findAllCategories,
     createCategory,
     isCategoriesLoading,
-    setIsCategoriesLoading,
     isCreatingCategory,
-    setIsCreatingCategory,
   };
 
   return (
