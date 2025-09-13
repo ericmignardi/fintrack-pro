@@ -5,19 +5,19 @@ import toast from "react-hot-toast";
 export const GoalContext = createContext();
 
 export const GoalProvider = ({ children }) => {
-  const [goals, setGoals] = useState(null);
+  const [goals, setGoals] = useState([]); // match transactions/budgets
   const [goal, setGoal] = useState(null);
   const [isGoalsLoading, setIsGoalsLoading] = useState(false);
   const [isCreatingGoal, setIsCreatingGoal] = useState(false);
   const [isUpdatingGoal, setIsUpdatingGoal] = useState(false);
   const [isDeletingGoal, setIsDeletingGoal] = useState(false);
 
-  const findAll = async () => {
+  // Fetch all goals
+  const findAllGoals = async () => {
     setIsGoalsLoading(true);
     try {
       const response = await axiosInstance.get("/goals");
       setGoals(response.data.goals || []);
-      toast.success("Goals retrieved successfully!");
       return true;
     } catch (error) {
       console.error(error);
@@ -28,35 +28,34 @@ export const GoalProvider = ({ children }) => {
     }
   };
 
+  // Fetch single goal
   const findGoalById = async (goalId) => {
     setIsGoalsLoading(true);
     try {
       const response = await axiosInstance.get(`/goals/${goalId}`);
       if (response.data.goal) {
         setGoal(response.data.goal);
-        toast.success("Goal retrieved successfully!");
         return true;
       } else {
-        toast.error("Failed to retrieve goal by ID.");
+        toast.error("Goal not found.");
         return false;
       }
     } catch (error) {
       console.error(error);
-      toast.error("Failed to retrieve goal by ID.");
+      toast.error("Failed to retrieve goal.");
       return false;
     } finally {
       setIsGoalsLoading(false);
     }
   };
 
+  // Create
   const createGoal = async (goalData) => {
     setIsCreatingGoal(true);
     try {
       const response = await axiosInstance.post("/goals", goalData);
       if (response.data.goal) {
-        setGoals((prev) =>
-          prev ? [...prev, response.data.goal] : [response.data.goal]
-        );
+        setGoals((prev) => [...prev, response.data.goal]);
         setGoal(response.data.goal);
         toast.success("Goal created successfully!");
         return true;
@@ -73,15 +72,14 @@ export const GoalProvider = ({ children }) => {
     }
   };
 
+  // Update
   const updateGoal = async (goalId, updatedGoal) => {
     setIsUpdatingGoal(true);
     try {
       const response = await axiosInstance.put(`/goals/${goalId}`, updatedGoal);
       if (response.data.goal) {
         setGoals((prev) =>
-          prev
-            ? prev.map((g) => (g.id === goalId ? response.data.goal : g))
-            : [response.data.goal]
+          prev.map((g) => (g.id === goalId ? response.data.goal : g))
         );
         setGoal(response.data.goal);
         toast.success("Goal updated successfully!");
@@ -99,12 +97,13 @@ export const GoalProvider = ({ children }) => {
     }
   };
 
+  // Delete
   const deleteGoal = async (goalId) => {
     setIsDeletingGoal(true);
     try {
       const response = await axiosInstance.delete(`/goals/${goalId}`);
       if (response.data.message === "Goal deleted successfully.") {
-        setGoals((prev) => (prev ? prev.filter((g) => g.id !== goalId) : []));
+        setGoals((prev) => prev.filter((g) => g.id !== goalId));
         if (goal?.id === goalId) setGoal(null);
         toast.success("Goal deleted successfully!");
         return true;
@@ -127,14 +126,10 @@ export const GoalProvider = ({ children }) => {
     goal,
     setGoal,
     isGoalsLoading,
-    setIsGoalsLoading,
     isCreatingGoal,
-    setIsCreatingGoal,
     isUpdatingGoal,
-    setIsUpdatingGoal,
     isDeletingGoal,
-    setIsDeletingGoal,
-    findAll,
+    findAllGoals,
     findGoalById,
     createGoal,
     updateGoal,

@@ -1,27 +1,25 @@
 function BudgetCard({ budget }) {
-  // const actualSpent = budget.actualSpent || 0;
-  // const remainingBudget = budget.remainingBudget || budget.budgetAmount;
-  // const progressPercentage = (
-  //   (actualSpent / budget.budgetAmount) *
-  //   100
-  // ).toFixed(1);
-  // const isOverBudget = actualSpent > budget.budgetAmount;
-
   return (
-    <div>
-      <div>
-        <strong>{budget.name}</strong>
+    <div className="flex flex-col gap-2 bg-white border border-[var(--neutral-gray)]/50 rounded-2xl p-4">
+      {/* Top row: budget name + amount */}
+      <div className="flex justify-between items-start">
+        <div className="text-lg font-semibold">
+          {budget.name || "Untitled Budget"}
+        </div>
+        <div className="text-lg font-bold text-[var(--primary-blue)]">
+          ${Number(budget.budgetAmount).toFixed(2)}
+        </div>
       </div>
-      <div>Category: {budget.category?.name || "Uncategorized"}</div>
-      <div>Budget: ${Number(budget.budgetAmount).toFixed(2)}</div>
-      {/* <div>Spent: ${Number(actualSpent).toFixed(2)}</div>
-      <div>Remaining: ${Number(remainingBudget).toFixed(2)}</div> */}
-      {/* <div>
-        Progress: {progressPercentage}% {isOverBudget ? "(Over Budget!)" : ""}
-      </div> */}
-      <div>Period: {budget.period}</div>
-      <div>
-        {new Date(budget.startDate).toLocaleDateString()} -{" "}
+
+      {/* Middle row: category + period */}
+      <div className="flex justify-between text-sm font-light text-[var(--neutral-gray)]">
+        <span>{budget.category?.name || "Uncategorized"}</span>
+        <span>{budget.period || "No period set"}</span>
+      </div>
+
+      {/* Bottom row: date range */}
+      <div className="text-xs text-[var(--neutral-gray)]">
+        {new Date(budget.startDate).toLocaleDateString()} –{" "}
         {new Date(budget.endDate).toLocaleDateString()}
       </div>
     </div>

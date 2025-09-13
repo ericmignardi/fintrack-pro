@@ -7,16 +7,15 @@ function BudgetList() {
 
   useEffect(() => {
     findAll();
-  }, [findAll]);
+  }, []);
 
   if (isBudgetsLoading) return <div>Loading budgets...</div>;
   if (!budgets || budgets.length === 0) return <div>No budgets found.</div>;
 
   return (
-    <div>
-      <h2>Budgets</h2>
-      <ul>
-        {budgets?.map((budget) => (
+    <div className="mt-2">
+      <ul className="flex flex-col justify-center gap-2">
+        {budgets.map((budget) => (
           <li key={budget.id}>
             <BudgetCard budget={budget} />
           </li>
