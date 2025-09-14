@@ -8,7 +8,6 @@ function GoalCard({ goal }) {
 
   return (
     <div className="flex flex-col gap-2 bg-white border border-[var(--neutral-gray)]/50 rounded-2xl p-4">
-      {/* Top row: goal title + target */}
       <div className="flex justify-between items-start">
         <div className="text-lg font-semibold">
           {goal.title || "Untitled Goal"}
@@ -18,14 +17,12 @@ function GoalCard({ goal }) {
         </div>
       </div>
 
-      {/* Description */}
       {goal.description && (
         <div className="text-sm text-[var(--dark-gray)]">
           {goal.description}
         </div>
       )}
 
-      {/* Progress and amounts */}
       <div className="flex justify-between text-sm font-light text-[var(--neutral-gray)]">
         <span>Saved: ${Number(goal.currentAmount).toFixed(2)}</span>
         <span>Remaining: ${Number(remainingAmount).toFixed(2)}</span>
@@ -40,7 +37,6 @@ function GoalCard({ goal }) {
         ) : null}
       </div>
 
-      {/* Target date + status */}
       <div className="flex justify-between text-xs text-[var(--neutral-gray)]">
         <span>Target: {new Date(goal.targetDate).toLocaleDateString()}</span>
         <span>Status: {goal.status}</span>

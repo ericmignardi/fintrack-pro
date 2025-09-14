@@ -49,6 +49,9 @@ export const createBudget = async (userId, budgetData) => {
       userId,
       ...budgetData,
     },
+    include: {
+      category: true,
+    },
   });
 };
 
@@ -56,6 +59,9 @@ export const updateBudget = async (userId, budgetId, budgetData) => {
   return await prisma.budget.update({
     where: { id: budgetId, userId },
     data: budgetData,
+    include: {
+      category: true,
+    },
   });
 };
 

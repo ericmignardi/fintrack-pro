@@ -56,7 +56,6 @@ function BudgetForm() {
         Add Budget
       </h2>
 
-      {/* Category */}
       <div className="flex flex-col gap-1">
         <label
           htmlFor="categoryId"
@@ -81,7 +80,6 @@ function BudgetForm() {
         </select>
       </div>
 
-      {/* Name */}
       <div className="flex flex-col gap-1">
         <label
           htmlFor="name"
@@ -100,7 +98,6 @@ function BudgetForm() {
         />
       </div>
 
-      {/* Budget Amount */}
       <div className="flex flex-col gap-1">
         <label
           htmlFor="budgetAmount"
@@ -120,7 +117,6 @@ function BudgetForm() {
         />
       </div>
 
-      {/* Period */}
       <fieldset className="flex flex-col gap-2">
         <legend className="text-sm font-medium text-[var(--neutral-gray)]">
           Period
@@ -162,7 +158,6 @@ function BudgetForm() {
         </div>
       </fieldset>
 
-      {/* Start Date */}
       <div className="flex flex-col gap-1">
         <label
           htmlFor="startDate"
@@ -181,7 +176,6 @@ function BudgetForm() {
         />
       </div>
 
-      {/* End Date */}
       <div className="flex flex-col gap-1">
         <label
           htmlFor="endDate"
@@ -200,7 +194,6 @@ function BudgetForm() {
         />
       </div>
 
-      {/* Submit */}
       <button
         type="submit"
         className="mt-2 font-medium py-2 px-4 rounded-lg text-white transition w-full bg-[var(--primary-blue)] hover:bg-[var(--secondary-blue)]"

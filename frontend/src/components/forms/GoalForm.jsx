@@ -49,7 +49,6 @@ function GoalForm() {
         Add Goal
       </h2>
 
-      {/* Title */}
       <div className="flex flex-col gap-1">
         <label
           htmlFor="title"
@@ -68,7 +67,6 @@ function GoalForm() {
         />
       </div>
 
-      {/* Description */}
       <div className="flex flex-col gap-1">
         <label
           htmlFor="description"
@@ -86,7 +84,6 @@ function GoalForm() {
         />
       </div>
 
-      {/* Target Amount */}
       <div className="flex flex-col gap-1">
         <label
           htmlFor="targetAmount"
@@ -105,7 +102,6 @@ function GoalForm() {
         />
       </div>
 
-      {/* Current Amount */}
       <div className="flex flex-col gap-1">
         <label
           htmlFor="currentAmount"
@@ -123,7 +119,6 @@ function GoalForm() {
         />
       </div>
 
-      {/* Target Date */}
       <div className="flex flex-col gap-1">
         <label
           htmlFor="targetDate"
@@ -142,7 +137,6 @@ function GoalForm() {
         />
       </div>
 
-      {/* Status */}
       <fieldset className="flex flex-col gap-2">
         <legend className="text-sm font-medium text-[var(--neutral-gray)]">
           Status
@@ -184,7 +178,6 @@ function GoalForm() {
         </div>
       </fieldset>
 
-      {/* Submit */}
       <button
         type="submit"
         className="mt-2 font-medium py-2 px-4 rounded-lg text-white transition w-full bg-[var(--primary-blue)] hover:bg-[var(--secondary-blue)]"
