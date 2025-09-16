@@ -1,3 +1,4 @@
+import TransactionPieChart from "../components/charts/TransactionPieChart";
 import TransactionForm from "../components/forms/TransactionForm";
 import TransactionList from "../components/TransactionList";
 
@@ -6,6 +7,7 @@ function Transactions() {
     <div>
       <TransactionForm />
       <TransactionList />
+      <TransactionPieChart />
     </div>
   );
 }
