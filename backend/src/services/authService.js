@@ -7,11 +7,9 @@ export const register = async (email, password, firstName, lastName) => {
   const existingUser = await prisma.user.findUnique({
     where: { email },
   });
-
   if (existingUser) {
     throw new Error("Email already in use");
   }
-
   const hashedPassword = await bcryptjs.hash(password, 10);
   const user = await prisma.user.create({
     data: {
@@ -21,12 +19,11 @@ export const register = async (email, password, firstName, lastName) => {
       lastName,
     },
   });
-
   // Create default categories for the new user
   await createDefaultCategories(user.id);
-
   const token = generateToken(user);
-  return { token, user };
+  const { passwordHash, ...safeUser } = user;
+  return { token, user: safeUser };
 };
 
 export const login = async (email, password) => {
@@ -40,6 +37,7 @@ export const login = async (email, password) => {
   if (!isValidPassword) {
     throw new Error("Invalid password");
   }
-  const token = generateToken(user);
-  return { token, user };
+  const { passwordHash, ...safeUser } = user;
+  const token = generateToken(safeUser);
+  return { token, user: safeUser };
 };
