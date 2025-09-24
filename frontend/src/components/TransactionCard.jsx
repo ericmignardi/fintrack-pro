@@ -7,8 +7,8 @@ function TransactionCard({ transaction }) {
   }).format(new Date(transaction.transactionDate));
 
   return (
-    <div className="flex flex-col gap-2 bg-white border border-[var(--neutral-gray)]/50 rounded-2xl p-4">
-      <div className="flex justify-between items-start">
+    <div>
+      <div>
         <div className="text-lg font-semibold">
           {transaction.description || "No description"}
         </div>
@@ -22,7 +22,7 @@ function TransactionCard({ transaction }) {
           ${Number(transaction.amount).toFixed(2)}
         </div>
       </div>
-      <div className="flex justify-between text-sm font-light text-[var(--neutral-gray)]">
+      <div className="text-sm font-light text-[var(--neutral-gray)]">
         <span>{transaction.category?.name || "Uncategorized"}</span>
         <span>{formattedDate}</span>
       </div>

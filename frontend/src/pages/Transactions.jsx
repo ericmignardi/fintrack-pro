@@ -5,9 +5,9 @@ import TransactionList from "../components/TransactionList";
 function Transactions() {
   return (
     <div>
-      <TransactionForm />
+      {/* <TransactionForm /> */}
       <TransactionList />
-      <TransactionPieChart />
+      {/* <TransactionPieChart /> */}
     </div>
   );
 }
