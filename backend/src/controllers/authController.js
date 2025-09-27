@@ -9,9 +9,6 @@ const cookieOptions = {
 
 export const register = async (req, res) => {
   const { email, password, firstName, lastName } = req.body;
-  if (!email || !password || !firstName || !lastName) {
-    return res.status(400).json({ error: "All fields are required." });
-  }
   try {
     const { token, user } = await authService.register(
       email,
@@ -39,9 +36,6 @@ export const register = async (req, res) => {
 
 export const login = async (req, res) => {
   const { email, password } = req.body;
-  if (!email || !password) {
-    return res.status(400).json({ error: "Email and password are required." });
-  }
   try {
     const { token, user } = await authService.login(email, password);
     res.cookie("token", token, cookieOptions);

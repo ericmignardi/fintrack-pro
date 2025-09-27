@@ -57,12 +57,6 @@ export const createGoal = async (req, res) => {
     status = "ACTIVE",
   } = req.body;
 
-  if (!title || !targetAmount || !targetDate) {
-    return res
-      .status(400)
-      .json({ error: "Title, target amount, and target date are required." });
-  }
-
   try {
     const newGoal = await goalService.createGoal(userId, {
       title,
@@ -96,12 +90,6 @@ export const updateGoal = async (req, res) => {
     targetDate,
     status,
   } = req.body;
-
-  if (!title || !targetAmount || !targetDate) {
-    return res
-      .status(400)
-      .json({ error: "Title, target amount, and target date are required." });
-  }
 
   try {
     const updatedGoal = await goalService.updateGoal(userId, goalId, {

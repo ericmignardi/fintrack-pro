@@ -28,10 +28,6 @@ export const createCategory = async (req, res) => {
 
   if (!userId) return res.status(401).json({ error: "User ID is required." });
 
-  if (!name || !type) {
-    return res.status(400).json({ error: "Name and type are required." });
-  }
-
   try {
     const category = await categoryService.createCategory(userId, {
       name,

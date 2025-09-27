@@ -28,12 +28,6 @@ export const createTransaction = async (req, res) => {
 
   const { categoryId, amount, description, transactionDate, type } = req.body;
 
-  if (!amount || !type || !transactionDate) {
-    return res
-      .status(400)
-      .json({ error: "Amount, type, and transaction date are required." });
-  }
-
   try {
     const transaction = await transactionService.createTransaction(userId, {
       categoryId,

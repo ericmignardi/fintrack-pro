@@ -43,15 +43,6 @@ export const createBudget = async (req, res) => {
 
   const { categoryId, name, budgetAmount, period, startDate, endDate } =
     req.body;
-  if (
-    !categoryId ||
-    !name ||
-    !budgetAmount ||
-    !period ||
-    !startDate ||
-    !endDate
-  )
-    return res.status(400).json({ error: "All fields are required." });
 
   try {
     const newBudget = await budgetService.createBudget(userId, {
@@ -81,15 +72,6 @@ export const updateBudget = async (req, res) => {
 
   const { categoryId, name, budgetAmount, period, startDate, endDate } =
     req.body;
-  if (
-    !categoryId ||
-    !name ||
-    !budgetAmount ||
-    !period ||
-    !startDate ||
-    !endDate
-  )
-    return res.status(400).json({ error: "All fields are required." });
 
   try {
     const updatedBudget = await budgetService.updateBudget(userId, budgetId, {
