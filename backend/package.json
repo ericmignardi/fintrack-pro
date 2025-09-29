@@ -5,6 +5,8 @@
   "main": "src/server.js",
   "scripts": {
     "dev": "node --watch src/server.js",
+    "start": "node src/server.js",
+    "postinstall": "cd ../frontend && npm install && npm run build && cd ../backend && npx prisma migrate deploy",
     "test:unit": "cross-env NODE_OPTIONS=--experimental-vm-modules jest src/__tests__/unit",
     "test:integration": "cross-env NODE_OPTIONS=--experimental-vm-modules NODE_ENV=test ENV_PATH=.env.test jest src/__tests__/integration",
     "test": "npm run test:unit && npm run test:integration"
