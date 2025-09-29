@@ -35,5 +35,4 @@ fintrack-pro is a modern, full-stack **financial tracking web application** buil
 
 ## 📸 Screenshots
 
-![Transactions Page](./frontend/src/assets/screenshot1.png)  
-![Budget Overview](./frontend/src/assets/screenshot2.png)
+![Transactions Page](./frontend/src/assets/screenshot1.png)
