@@ -1,8 +1,7 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useGoal } from "../../hooks/useGoal";
 
-function GoalForm() {
-  const { createGoal } = useGoal();
+function GoalForm({ initialData = null, onSubmit, mode = "create" }) {
   const [formData, setFormData] = useState({
     title: "",
     description: "",
@@ -20,15 +19,19 @@ function GoalForm() {
     }));
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const success = await createGoal({
-      ...formData,
-      targetAmount: parseFloat(formData.targetAmount),
-      currentAmount: parseFloat(formData.currentAmount),
-    });
-
-    if (success) {
+  useEffect(() => {
+    if (initialData) {
+      setFormData({
+        title: initialData.title || "",
+        description: initialData.description || "",
+        targetAmount: initialData.targetAmount?.toString() || "",
+        currentAmount: initialData.currentAmount?.toString() || "0",
+        targetDate: initialData.targetDate
+          ? initialData.targetDate.slice(0, 10)
+          : "",
+        status: initialData.status || "ACTIVE",
+      });
+    } else {
       setFormData({
         title: "",
         description: "",
@@ -38,23 +41,25 @@ function GoalForm() {
         status: "ACTIVE",
       });
     }
+  }, [initialData]);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    await onSubmit({
+      ...formData,
+      targetAmount: parseFloat(formData.targetAmount),
+      currentAmount: parseFloat(formData.currentAmount),
+    });
   };
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="bg-white border border-[var(--neutral-gray)]/50 rounded-2xl p-4 flex flex-col gap-4 w-full"
-    >
-      <h2 className="text-xl font-semibold text-[var(--dark-gray)]">
-        Add Goal
-      </h2>
-
-      <div className="flex flex-col gap-1">
+    <form onSubmit={handleSubmit} className="space-y-4">
+      <div className="space-y-1">
         <label
           htmlFor="title"
-          className="text-sm font-medium text-[var(--neutral-gray)]"
+          className="block text-sm font-medium text-gray-700"
         >
-          Title
+          Goal Title
         </label>
         <input
           type="text"
@@ -63,14 +68,15 @@ function GoalForm() {
           value={formData.title}
           onChange={handleChange}
           required
-          className="w-full rounded-lg border border-[var(--light-gray)] px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[var(--primary-blue)]"
+          className="w-full rounded-lg border border-gray-300 p-2 focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
+          placeholder="e.g., Buy a House"
         />
       </div>
 
-      <div className="flex flex-col gap-1">
+      <div className="space-y-1">
         <label
           htmlFor="description"
-          className="text-sm font-medium text-[var(--neutral-gray)]"
+          className="block text-sm font-medium text-gray-700"
         >
           Description
         </label>
@@ -80,49 +86,62 @@ function GoalForm() {
           value={formData.description}
           onChange={handleChange}
           rows={3}
-          className="w-full rounded-lg border border-[var(--light-gray)] px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[var(--primary-blue)]"
+          className="w-full rounded-lg border border-gray-300 p-2 focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
+          placeholder="Describe your goal..."
         />
       </div>
 
-      <div className="flex flex-col gap-1">
+      <div className="space-y-1">
         <label
           htmlFor="targetAmount"
-          className="text-sm font-medium text-[var(--neutral-gray)]"
+          className="block text-sm font-medium text-gray-700"
         >
           Target Amount
         </label>
-        <input
-          type="number"
-          id="targetAmount"
-          name="targetAmount"
-          value={formData.targetAmount}
-          onChange={handleChange}
-          required
-          className="w-full rounded-lg border border-[var(--light-gray)] px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[var(--primary-blue)]"
-        />
+        <div className="relative">
+          <span className="absolute left-3 top-2 text-gray-500">$</span>
+          <input
+            type="number"
+            id="targetAmount"
+            name="targetAmount"
+            value={formData.targetAmount}
+            onChange={handleChange}
+            required
+            min="0"
+            step="0.01"
+            className="w-full rounded-lg border border-gray-300 p-2 pl-7 focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
+            placeholder="0.00"
+          />
+        </div>
       </div>
 
-      <div className="flex flex-col gap-1">
+      <div className="space-y-1">
         <label
           htmlFor="currentAmount"
-          className="text-sm font-medium text-[var(--neutral-gray)]"
+          className="block text-sm font-medium text-gray-700"
         >
           Current Amount
         </label>
-        <input
-          type="number"
-          id="currentAmount"
-          name="currentAmount"
-          value={formData.currentAmount}
-          onChange={handleChange}
-          className="w-full rounded-lg border border-[var(--light-gray)] px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[var(--primary-blue)]"
-        />
+        <div className="relative">
+          <span className="absolute left-3 top-2 text-gray-500">$</span>
+          <input
+            type="number"
+            id="currentAmount"
+            name="currentAmount"
+            value={formData.currentAmount}
+            onChange={handleChange}
+            min="0"
+            step="0.01"
+            className="w-full rounded-lg border border-gray-300 p-2 pl-7 focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
+            placeholder="0.00"
+          />
+        </div>
       </div>
 
-      <div className="flex flex-col gap-1">
+      <div className="space-y-1">
         <label
           htmlFor="targetDate"
-          className="text-sm font-medium text-[var(--neutral-gray)]"
+          className="block text-sm font-medium text-gray-700"
         >
           Target Date
         </label>
@@ -133,56 +152,56 @@ function GoalForm() {
           value={formData.targetDate}
           onChange={handleChange}
           required
-          className="w-full rounded-lg border border-[var(--light-gray)] px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[var(--primary-blue)]"
+          className="w-full rounded-lg border border-gray-300 p-2 focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
         />
       </div>
 
-      <fieldset className="flex flex-col gap-2">
-        <legend className="text-sm font-medium text-[var(--neutral-gray)]">
+      <div className="space-y-2">
+        <label className="block text-sm font-medium text-gray-700">
           Status
-        </legend>
-        <div className="flex gap-6">
-          <label className="flex items-center gap-2">
+        </label>
+        <div className="flex gap-4">
+          <label className="flex items-center">
             <input
               type="radio"
               name="status"
               value="ACTIVE"
               checked={formData.status === "ACTIVE"}
               onChange={handleChange}
-              className="text-[var(--primary-blue)] focus:ring-[var(--primary-blue)]"
+              className="text-blue-600 focus:ring-blue-500 h-4 w-4"
             />
-            <span>Active</span>
+            <span className="ml-2 text-sm text-gray-700">Active</span>
           </label>
-          <label className="flex items-center gap-2">
+          <label className="flex items-center">
             <input
               type="radio"
               name="status"
               value="COMPLETED"
               checked={formData.status === "COMPLETED"}
               onChange={handleChange}
-              className="text-[var(--success-green)] focus:ring-[var(--success-green)]"
+              className="text-green-600 focus:ring-green-500 h-4 w-4"
             />
-            <span>Completed</span>
+            <span className="ml-2 text-sm text-gray-700">Completed</span>
           </label>
-          <label className="flex items-center gap-2">
+          <label className="flex items-center">
             <input
               type="radio"
               name="status"
               value="PAUSED"
               checked={formData.status === "PAUSED"}
               onChange={handleChange}
-              className="text-[var(--danger-red)] focus:ring-[var(--danger-red)]"
+              className="text-yellow-600 focus:ring-yellow-500 h-4 w-4"
             />
-            <span>Paused</span>
+            <span className="ml-2 text-sm text-gray-700">Paused</span>
           </label>
         </div>
-      </fieldset>
+      </div>
 
       <button
         type="submit"
-        className="mt-2 font-medium py-2 px-4 rounded-lg text-white transition w-full bg-[var(--primary-blue)] hover:bg-[var(--secondary-blue)]"
+        className="w-full rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors"
       >
-        Create Goal
+        {mode === "edit" ? "Update Goal" : "Create Goal"}
       </button>
     </form>
   );

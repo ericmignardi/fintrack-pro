@@ -1,6 +1,5 @@
 import { jest } from "@jest/globals";
 
-// Mock prisma client
 const mockPrismaUser = {
   findUnique: jest.fn(),
   create: jest.fn(),
@@ -10,7 +9,6 @@ jest.unstable_mockModule("../../config/database.js", () => ({
   default: { user: mockPrismaUser },
 }));
 
-// Mock bcryptjs
 const mockBcrypt = {
   hash: jest.fn(),
   compare: jest.fn(),
@@ -20,14 +18,12 @@ jest.unstable_mockModule("bcryptjs", () => ({
   default: mockBcrypt,
 }));
 
-// Mock token util
 const mockGenerateToken = jest.fn();
 jest.unstable_mockModule("../../utils/token.js", () => ({
   __esModule: true,
   generateToken: mockGenerateToken,
 }));
 
-// Mock category service
 const mockCreateDefaultCategories = jest.fn();
 jest.unstable_mockModule("../../services/categoryService.js", () => ({
   __esModule: true,
@@ -36,7 +32,7 @@ jest.unstable_mockModule("../../services/categoryService.js", () => ({
 
 const { register, login } = await import("../../services/authService.js");
 
-describe("authService Unit Tests", () => {
+describe("User (Auth) Unit Tests", () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });

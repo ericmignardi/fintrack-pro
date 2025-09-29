@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
-import { useBudget } from "../../hooks/useBudget";
 import { useCategory } from "../../hooks/useCategory";
 
-function BudgetForm() {
-  const { createBudget } = useBudget();
-  const { categories, findAllCategories } = useCategory();
+function BudgetForm({ initialData = null, onSubmit, mode = "create" }) {
+  const { categories, findAllCategories, isCategoriesLoading } = useCategory();
+  console.log("Categories in form:", categories); // Debug log
+  console.log("Loading state:", isCategoriesLoading); // Debug log
 
   const [formData, setFormData] = useState({
     categoryId: "",
@@ -16,8 +16,39 @@ function BudgetForm() {
   });
 
   useEffect(() => {
-    findAllCategories();
-  }, []);
+    const loadCategories = async () => {
+      try {
+        await findAllCategories();
+      } catch (error) {
+        console.error("Error loading categories:", error);
+      }
+    };
+    loadCategories();
+  }, [findAllCategories]);
+
+  useEffect(() => {
+    if (initialData) {
+      setFormData({
+        categoryId: initialData.categoryId?.toString() || "",
+        name: initialData.name || "",
+        budgetAmount: initialData.budgetAmount?.toString() || "",
+        period: initialData.period || "MONTHLY",
+        startDate: initialData.startDate
+          ? initialData.startDate.slice(0, 10)
+          : "",
+        endDate: initialData.endDate ? initialData.endDate.slice(0, 10) : "",
+      });
+    } else {
+      setFormData({
+        categoryId: "",
+        name: "",
+        budgetAmount: "",
+        period: "MONTHLY",
+        startDate: "",
+        endDate: "",
+      });
+    }
+  }, [initialData]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -29,61 +60,21 @@ function BudgetForm() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const success = await createBudget({
+    const payload = {
       ...formData,
       categoryId: parseInt(formData.categoryId, 10),
       budgetAmount: parseFloat(formData.budgetAmount),
-    });
-
-    if (success) {
-      setFormData({
-        categoryId: "",
-        name: "",
-        budgetAmount: "",
-        period: "MONTHLY",
-        startDate: "",
-        endDate: "",
-      });
-    }
+    };
+    await onSubmit(payload);
   };
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="bg-white border border-[var(--neutral-gray)]/50 rounded-2xl p-4 flex flex-col gap-4 w-full"
-    >
-      <h2 className="text-xl font-semibold text-[var(--dark-gray)]">
-        Add Budget
-      </h2>
-
-      <div className="flex flex-col gap-1">
-        <label
-          htmlFor="categoryId"
-          className="text-sm font-medium text-[var(--neutral-gray)]"
-        >
-          Category
-        </label>
-        <select
-          id="categoryId"
-          name="categoryId"
-          value={formData.categoryId}
-          onChange={handleChange}
-          required
-          className="w-full rounded-lg border border-[var(--light-gray)] px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[var(--primary-blue)]"
-        >
-          <option value="">Select category</option>
-          {categories?.map((category) => (
-            <option key={category.id} value={category.id}>
-              {category.name}
-            </option>
-          ))}
-        </select>
-      </div>
-
-      <div className="flex flex-col gap-1">
+    <form onSubmit={handleSubmit} className="space-y-4">
+      {/* Budget Name */}
+      <div className="space-y-1">
         <label
           htmlFor="name"
-          className="text-sm font-medium text-[var(--neutral-gray)]"
+          className="block text-sm font-medium text-gray-700"
         >
           Budget Name
         </label>
@@ -94,111 +85,154 @@ function BudgetForm() {
           value={formData.name}
           onChange={handleChange}
           required
-          className="w-full rounded-lg border border-[var(--light-gray)] px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[var(--primary-blue)]"
+          className="w-full rounded-lg border border-gray-300 p-2 focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
+          placeholder="e.g., Monthly Groceries"
         />
       </div>
 
-      <div className="flex flex-col gap-1">
+      {/* Category */}
+      <div className="space-y-1">
+        <label
+          htmlFor="categoryId"
+          className="block text-sm font-medium text-gray-700"
+        >
+          Category
+        </label>
+        <select
+          id="categoryId"
+          name="categoryId"
+          value={formData.categoryId}
+          onChange={handleChange}
+          required
+          className="w-full rounded-lg border border-gray-300 p-2 focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
+        >
+          <option value="">Select a category</option>
+          {Array.isArray(categories) && categories.length > 0 ? (
+            categories.map((category) => (
+              <option key={category.id} value={category.id}>
+                {category.name}
+              </option>
+            ))
+          ) : (
+            <option value="" disabled>
+              Loading categories...
+            </option>
+          )}
+        </select>
+      </div>
+
+      {/* Budget Amount */}
+      <div className="space-y-1">
         <label
           htmlFor="budgetAmount"
-          className="text-sm font-medium text-[var(--neutral-gray)]"
+          className="block text-sm font-medium text-gray-700"
         >
           Budget Amount
         </label>
-        <input
-          type="number"
-          step="0.01"
-          id="budgetAmount"
-          name="budgetAmount"
-          value={formData.budgetAmount}
-          onChange={handleChange}
-          required
-          className="w-full rounded-lg border border-[var(--light-gray)] px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[var(--primary-blue)]"
-        />
+        <div className="relative">
+          <span className="absolute left-3 top-2 text-gray-500">$</span>
+          <input
+            type="number"
+            id="budgetAmount"
+            name="budgetAmount"
+            value={formData.budgetAmount}
+            onChange={handleChange}
+            required
+            min="0"
+            step="0.01"
+            className="w-full rounded-lg border border-gray-300 p-2 pl-7 focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
+            placeholder="0.00"
+          />
+        </div>
       </div>
 
-      <fieldset className="flex flex-col gap-2">
-        <legend className="text-sm font-medium text-[var(--neutral-gray)]">
+      {/* Period */}
+      <div className="space-y-2">
+        <label className="block text-sm font-medium text-gray-700">
           Period
-        </legend>
-        <div className="flex gap-6">
-          <label className="flex items-center gap-2">
+        </label>
+        <div className="flex gap-4">
+          <label className="flex items-center">
             <input
               type="radio"
               name="period"
               value="WEEKLY"
               checked={formData.period === "WEEKLY"}
               onChange={handleChange}
-              className="text-[var(--danger-red)] focus:ring-[var(--danger-red)]"
+              className="text-blue-600 focus:ring-blue-500 h-4 w-4"
             />
-            <span>Weekly</span>
+            <span className="ml-2 text-sm text-gray-700">Weekly</span>
           </label>
-          <label className="flex items-center gap-2">
+          <label className="flex items-center">
             <input
               type="radio"
               name="period"
               value="MONTHLY"
               checked={formData.period === "MONTHLY"}
               onChange={handleChange}
-              className="text-[var(--primary-blue)] focus:ring-[var(--primary-blue)]"
+              className="text-blue-600 focus:ring-blue-500 h-4 w-4"
             />
-            <span>Monthly</span>
+            <span className="ml-2 text-sm text-gray-700">Monthly</span>
           </label>
-          <label className="flex items-center gap-2">
+          <label className="flex items-center">
             <input
               type="radio"
               name="period"
               value="YEARLY"
               checked={formData.period === "YEARLY"}
               onChange={handleChange}
-              className="text-[var(--success-green)] focus:ring-[var(--success-green)]"
+              className="text-blue-600 focus:ring-blue-500 h-4 w-4"
             />
-            <span>Yearly</span>
+            <span className="ml-2 text-sm text-gray-700">Yearly</span>
           </label>
         </div>
-      </fieldset>
-
-      <div className="flex flex-col gap-1">
-        <label
-          htmlFor="startDate"
-          className="text-sm font-medium text-[var(--neutral-gray)]"
-        >
-          Start Date
-        </label>
-        <input
-          type="date"
-          id="startDate"
-          name="startDate"
-          value={formData.startDate}
-          onChange={handleChange}
-          required
-          className="w-full rounded-lg border border-[var(--light-gray)] px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[var(--primary-blue)]"
-        />
       </div>
 
-      <div className="flex flex-col gap-1">
-        <label
-          htmlFor="endDate"
-          className="text-sm font-medium text-[var(--neutral-gray)]"
-        >
-          End Date
-        </label>
-        <input
-          type="date"
-          id="endDate"
-          name="endDate"
-          value={formData.endDate}
-          onChange={handleChange}
-          required
-          className="w-full rounded-lg border border-[var(--light-gray)] px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[var(--primary-blue)]"
-        />
+      {/* Date Range */}
+      <div className="grid grid-cols-2 gap-4">
+        <div className="space-y-1">
+          <label
+            htmlFor="startDate"
+            className="block text-sm font-medium text-gray-700"
+          >
+            Start Date
+          </label>
+          <input
+            type="date"
+            id="startDate"
+            name="startDate"
+            value={formData.startDate}
+            onChange={handleChange}
+            required
+            className="w-full rounded-lg border border-gray-300 p-2 focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
+        <div className="space-y-1">
+          <label
+            htmlFor="endDate"
+            className="block text-sm font-medium text-gray-700"
+          >
+            End Date
+          </label>
+          <input
+            type="date"
+            id="endDate"
+            name="endDate"
+            value={formData.endDate}
+            onChange={handleChange}
+            required
+            min={formData.startDate}
+            className="w-full rounded-lg border border-gray-300 p-2 focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
       </div>
 
+      {/* Submit Button */}
       <button
         type="submit"
-        className="mt-2 font-medium py-2 px-4 rounded-lg text-white transition w-full bg-[var(--primary-blue)] hover:bg-[var(--secondary-blue)]"
+        className="w-full rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors"
       >
-        Create Budget
+        {mode === "edit" ? "Update Budget" : "Create Budget"}
       </button>
     </form>
   );

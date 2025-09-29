@@ -1,14 +1,13 @@
 import { useState } from "react";
 import { Link, NavLink } from "react-router-dom";
 import logo from "../assets/logo.svg";
-import { FiMenu, FiSearch, FiSettings, FiUser, FiX } from "react-icons/fi";
+import { Menu, Search, X } from "lucide-react";
 
 function Header() {
   const [mobileHeaderToggle, setMobileHeaderToggle] = useState(false);
 
   const navItems = [
-    { to: "/", label: "Home" },
-    { to: "/transactions", label: "Transactions" },
+    { to: "/", label: "Transactions" },
     { to: "/budgets", label: "Budgets" },
     { to: "/goals", label: "Goals" },
   ];
@@ -54,20 +53,8 @@ function Header() {
             id="transactions"
             placeholder="Search..."
           />
-          <FiSearch />
+          <Search size={18} />
         </label>
-        {/* <Link
-          to="/settings"
-          className="bg-white border border-[var(--neutral-gray)]/50 rounded-full p-2"
-        >
-          <FiSettings />
-        </Link>
-        <Link
-          to="/profile"
-          className="bg-white border border-[var(--neutral-gray)]/50 rounded-full p-2"
-        >
-          <FiUser />
-        </Link> */}
       </div>
 
       {/* Mobile Navigation Toggle */}
@@ -77,7 +64,7 @@ function Header() {
         aria-expanded={mobileHeaderToggle}
         aria-controls="mobile-menu"
       >
-        {mobileHeaderToggle ? <FiX /> : <FiMenu />}
+        {mobileHeaderToggle ? <X size={24} /> : <Menu size={24} />}
       </button>
 
       {/* Mobile Navigation */}

@@ -1,10 +1,8 @@
 import { useEffect, useState } from "react";
-import { useTransaction } from "../../hooks/useTransaction";
 import { useCategory } from "../../hooks/useCategory";
 
-function TransactionForm() {
-  const { createTransaction } = useTransaction();
-  const { categories, findAllCategories } = useCategory();
+function TransactionForm({ initialData = null, onSubmit, mode = "create" }) {
+  const { categories, findAllCategories, isCategoriesLoading } = useCategory();
   const [formData, setFormData] = useState({
     categoryId: "",
     amount: "",
@@ -17,6 +15,28 @@ function TransactionForm() {
     findAllCategories();
   }, []);
 
+  useEffect(() => {
+    if (initialData) {
+      setFormData({
+        categoryId: initialData.categoryId?.toString() || "",
+        amount: initialData.amount?.toString() || "",
+        description: initialData.description || "",
+        transactionDate: initialData.transactionDate
+          ? initialData.transactionDate.slice(0, 10)
+          : "",
+        type: initialData.type || "",
+      });
+    } else {
+      setFormData({
+        categoryId: "",
+        amount: "",
+        description: "",
+        transactionDate: "",
+        type: "",
+      });
+    }
+  }, [initialData]);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -27,13 +47,13 @@ function TransactionForm() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const success = await createTransaction({
+    const payload = {
       ...formData,
       amount: parseFloat(formData.amount),
-      categoryId: parseInt(formData.categoryId, 10), // <-- convert to number
-    });
-
-    if (success) {
+      categoryId: parseInt(formData.categoryId, 10),
+    };
+    await onSubmit(payload);
+    if (mode === "create") {
       setFormData({
         categoryId: "",
         amount: "",
@@ -50,7 +70,7 @@ function TransactionForm() {
       className="bg-white border border-[var(--neutral-gray)]/50 rounded-2xl p-4 flex flex-col gap-4 w-full"
     >
       <h2 className="text-xl font-semibold text-[var(--dark-gray)]">
-        Add Transaction
+        {mode === "update" ? "Update Transaction" : "Add Transaction"}
       </h2>
 
       {/* Amount */}
@@ -154,8 +174,11 @@ function TransactionForm() {
           value={formData.categoryId}
           onChange={handleChange}
           className="w-full rounded-lg border border-[var(--light-gray)] px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[var(--primary-blue)]"
+          disabled={isCategoriesLoading}
         >
-          <option value="">Select category</option>
+          <option value="">
+            {isCategoriesLoading ? "Loading categories..." : "Select category"}
+          </option>
           {categories?.map((category) => (
             <option key={category.id} value={category.id}>
               {category.name}
@@ -175,7 +198,7 @@ function TransactionForm() {
             : "bg-[var(--primary-blue)] hover:bg-[var(--secondary-blue)]"
         }`}
       >
-        Create Transaction
+        {mode === "update" ? "Update Transaction" : "Create Transaction"}
       </button>
     </form>
   );
