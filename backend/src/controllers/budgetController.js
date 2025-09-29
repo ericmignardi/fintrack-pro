@@ -9,7 +9,6 @@ const getUserId = (req) => {
 export const findAllBudgets = async (req, res) => {
   const userId = getUserId(req);
   if (!userId) return res.status(401).json({ error: "User ID is required." });
-
   try {
     const budgets = await budgetService.findAllBudgets(userId);
     res.status(200).json({ message: "Budgets received successfully", budgets });
@@ -22,11 +21,7 @@ export const findAllBudgets = async (req, res) => {
 export const findBudgetById = async (req, res) => {
   const userId = getUserId(req);
   if (!userId) return res.status(401).json({ error: "User ID is required." });
-
   const budgetId = parseInt(req.params.id);
-  if (!budgetId)
-    return res.status(400).json({ error: "Budget ID is required." });
-
   try {
     const budget = await budgetService.findBudgetById(userId, budgetId);
     if (!budget) return res.status(404).json({ error: "Budget not found." });
@@ -40,10 +35,8 @@ export const findBudgetById = async (req, res) => {
 export const createBudget = async (req, res) => {
   const userId = getUserId(req);
   if (!userId) return res.status(401).json({ error: "User ID is required." });
-
   const { categoryId, name, budgetAmount, period, startDate, endDate } =
     req.body;
-
   try {
     const newBudget = await budgetService.createBudget(userId, {
       categoryId: parseInt(categoryId),
@@ -65,14 +58,9 @@ export const createBudget = async (req, res) => {
 export const updateBudget = async (req, res) => {
   const userId = getUserId(req);
   if (!userId) return res.status(401).json({ error: "User ID is required." });
-
   const budgetId = parseInt(req.params.id);
-  if (!budgetId)
-    return res.status(400).json({ error: "Budget ID is required." });
-
   const { categoryId, name, budgetAmount, period, startDate, endDate } =
     req.body;
-
   try {
     const updatedBudget = await budgetService.updateBudget(userId, budgetId, {
       categoryId: parseInt(categoryId),
@@ -96,11 +84,7 @@ export const updateBudget = async (req, res) => {
 export const deleteBudget = async (req, res) => {
   const userId = getUserId(req);
   if (!userId) return res.status(401).json({ error: "User ID is required." });
-
   const budgetId = parseInt(req.params.id);
-  if (!budgetId)
-    return res.status(400).json({ error: "Budget ID is required." });
-
   try {
     const deletedBudget = await budgetService.deleteBudget(userId, budgetId);
     if (!deletedBudget)

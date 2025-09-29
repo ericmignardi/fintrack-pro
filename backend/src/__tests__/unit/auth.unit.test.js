@@ -32,7 +32,7 @@ jest.unstable_mockModule("../../services/categoryService.js", () => ({
 
 const { register, login } = await import("../../services/authService.js");
 
-describe("User (Auth) Unit Tests", () => {
+describe("Auth Unit Tests", () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });

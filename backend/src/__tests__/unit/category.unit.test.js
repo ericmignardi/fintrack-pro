@@ -1,6 +1,5 @@
 import { jest } from "@jest/globals";
 
-// Mock Prisma client
 const mockPrismaCategory = {
   findMany: jest.fn(),
   create: jest.fn(),

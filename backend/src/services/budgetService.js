@@ -19,10 +19,7 @@ export const findBudgetById = async (userId, budgetId) => {
       category: true,
     },
   });
-
   if (!budget) return null;
-
-  // Calculate actual spending in this category for budget period
   const actualSpending = await prisma.transaction.aggregate({
     where: {
       userId,
@@ -35,7 +32,6 @@ export const findBudgetById = async (userId, budgetId) => {
     },
     _sum: { amount: true },
   });
-
   return {
     ...budget,
     actualSpent: actualSpending._sum.amount || 0,

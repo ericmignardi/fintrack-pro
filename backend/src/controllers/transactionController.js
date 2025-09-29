@@ -9,7 +9,6 @@ const getUserId = (req) => {
 export const findAllTransactions = async (req, res) => {
   const userId = getUserId(req);
   if (!userId) return res.status(401).json({ error: "User ID is required." });
-
   try {
     const transactions = await transactionService.findAllTransactions(userId);
     res.status(200).json({
@@ -25,9 +24,7 @@ export const findAllTransactions = async (req, res) => {
 export const createTransaction = async (req, res) => {
   const userId = getUserId(req);
   if (!userId) return res.status(401).json({ error: "User ID is required." });
-
   const { categoryId, amount, description, transactionDate, type } = req.body;
-
   try {
     const transaction = await transactionService.createTransaction(userId, {
       categoryId,
@@ -36,7 +33,6 @@ export const createTransaction = async (req, res) => {
       transactionDate: new Date(transactionDate),
       type,
     });
-
     res.status(201).json({
       message: "Transaction created successfully.",
       transaction,
@@ -50,10 +46,8 @@ export const createTransaction = async (req, res) => {
 export const updateTransaction = async (req, res) => {
   const userId = getUserId(req);
   if (!userId) return res.status(401).json({ error: "User ID is required." });
-
   const { id } = req.params;
   const { categoryId, amount, description, transactionDate, type } = req.body;
-
   try {
     const updated = await transactionService.updateTransaction(
       Number(id),
@@ -68,7 +62,6 @@ export const updateTransaction = async (req, res) => {
         type,
       }
     );
-
     res.status(200).json({
       message: "Transaction updated successfully.",
       transaction: updated,
@@ -85,9 +78,7 @@ export const updateTransaction = async (req, res) => {
 export const deleteTransaction = async (req, res) => {
   const userId = getUserId(req);
   if (!userId) return res.status(401).json({ error: "User ID is required." });
-
   const { id } = req.params;
-
   try {
     await transactionService.deleteTransaction(Number(id), userId);
     res.status(200).json({ message: "Transaction deleted successfully." });
@@ -103,15 +94,12 @@ export const deleteTransaction = async (req, res) => {
 export const findTransactionsByCategory = async (req, res) => {
   const userId = getUserId(req);
   if (!userId) return res.status(401).json({ error: "User ID is required." });
-
   const { categoryId } = req.params;
-
   try {
     const transactions = await transactionService.findTransactionsByCategory(
       userId,
       Number(categoryId)
     );
-
     res.status(200).json({
       message: "Transactions retrieved successfully.",
       transactions,
@@ -125,19 +113,15 @@ export const findTransactionsByCategory = async (req, res) => {
 export const findTransactionById = async (req, res) => {
   const userId = getUserId(req);
   if (!userId) return res.status(401).json({ error: "User ID is required." });
-
   const { id } = req.params;
-
   try {
     const transaction = await transactionService.findTransactionById(
       userId,
       Number(id)
     );
-
     if (!transaction) {
       return res.status(404).json({ error: "Transaction not found." });
     }
-
     res.status(200).json({
       message: "Transaction retrieved successfully.",
       transaction,

@@ -21,7 +21,6 @@ export const createCategory = async (userId, categoryData) => {
   });
 };
 
-// Create default categories for new users
 export const createDefaultCategories = async (userId) => {
   const defaultCategories = [
     { name: "Salary", type: "INCOME", color: "#10B981", icon: "briefcase" },
@@ -43,7 +42,6 @@ export const createDefaultCategories = async (userId) => {
     { name: "Entertainment", type: "EXPENSE", color: "#EC4899", icon: "film" },
     { name: "Utilities", type: "EXPENSE", color: "#14B8A6", icon: "zap" },
   ];
-
   return await prisma.category.createMany({
     data: defaultCategories.map((cat) => ({
       userId,

@@ -1,6 +1,5 @@
 import { jest } from "@jest/globals";
 
-// Mock Prisma client
 const mockPrismaTransaction = {
   findMany: jest.fn(),
   findUnique: jest.fn(),
@@ -123,6 +122,7 @@ describe("Transaction Service", () => {
         include: { category: true },
       });
     });
+
     it("should throw P2025 error if transaction not found or owned by another user", async () => {
       mockPrismaTransaction.findUnique.mockResolvedValue(null);
       await expect(deleteTransaction(1, 123)).rejects.toMatchObject({

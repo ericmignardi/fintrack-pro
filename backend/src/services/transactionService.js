@@ -19,13 +19,10 @@ export const createTransaction = async (userId, transactionData) => {
 };
 
 export const updateTransaction = async (id, userId, transactionData) => {
-  // Step 1: Verify transaction ownership
   const existing = await prisma.transaction.findUnique({ where: { id } });
   if (!existing || existing.userId !== userId) {
     throw Object.assign(new Error("Transaction not found."), { code: "P2025" });
   }
-
-  // Step 2: Validate category if provided
   if (
     transactionData.categoryId !== undefined &&
     transactionData.categoryId !== null
@@ -33,15 +30,12 @@ export const updateTransaction = async (id, userId, transactionData) => {
     const category = await prisma.category.findUnique({
       where: { id: transactionData.categoryId },
     });
-
     if (!category || category.userId !== userId) {
       throw Object.assign(new Error("Invalid category."), {
         code: "CATEGORY_NOT_FOUND",
       });
     }
   }
-
-  // Step 3: Update
   return await prisma.transaction.update({
     where: { id },
     data: transactionData,
@@ -50,16 +44,13 @@ export const updateTransaction = async (id, userId, transactionData) => {
 };
 
 export const deleteTransaction = async (id, userId) => {
-  // Step 1: Verify ownership
   const existing = await prisma.transaction.findUnique({ where: { id } });
   if (!existing || existing.userId !== userId) {
     throw Object.assign(new Error("Transaction not found."), { code: "P2025" });
   }
-
-  // Step 2: Delete securely
   return await prisma.transaction.delete({
     where: { id },
-    include: { category: true }, // optional, but useful if you want to return related info
+    include: { category: true },
   });
 };
 

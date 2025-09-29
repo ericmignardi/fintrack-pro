@@ -9,7 +9,6 @@ const getUserId = (req) => {
 export const getAllCategories = async (req, res) => {
   const userId = getUserId(req);
   if (!userId) return res.status(401).json({ error: "User ID is required." });
-
   try {
     const categories = await categoryService.getAllCategories(userId);
     res.status(200).json({
@@ -25,9 +24,7 @@ export const getAllCategories = async (req, res) => {
 export const createCategory = async (req, res) => {
   const userId = getUserId(req);
   const { name, type, color, icon } = req.body;
-
   if (!userId) return res.status(401).json({ error: "User ID is required." });
-
   try {
     const category = await categoryService.createCategory(userId, {
       name,
@@ -35,7 +32,6 @@ export const createCategory = async (req, res) => {
       color,
       icon,
     });
-
     res.status(201).json({
       message: "Category created successfully.",
       category,

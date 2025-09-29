@@ -1,6 +1,5 @@
 import { jest } from "@jest/globals";
 
-// Mock Prisma client
 const mockPrismaBudget = {
   findMany: jest.fn(),
   findFirst: jest.fn(),

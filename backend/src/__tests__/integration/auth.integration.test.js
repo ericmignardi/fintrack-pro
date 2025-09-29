@@ -3,7 +3,7 @@ import bcrypt from "bcryptjs";
 import prisma from "../../config/database.js";
 import app from "../../app.js";
 
-describe("User (Auth) Integration Tests", () => {
+describe("Auth Integration Tests", () => {
   beforeEach(async () => {
     await prisma.user.deleteMany({});
   });
