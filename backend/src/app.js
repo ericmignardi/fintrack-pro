@@ -19,15 +19,6 @@ const app = express();
 
 const limiter = rateLimit({ windowMs: 15 * 60 * 1000, max: 100 });
 
-if (process.env.NODE_ENV === "development") {
-  app.use(
-    cors({
-      origin: "http://localhost:5173",
-      credentials: true,
-    })
-  );
-}
-
 app.use(helmet());
 app.use(express.json());
 app.use(cookieParser());
