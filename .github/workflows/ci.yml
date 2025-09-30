@@ -42,6 +42,11 @@ jobs:
       - name: Install dependencies
         run: npm install
 
+      - name: Set up test database
+        run: npx prisma db push
+        env:
+          DATABASE_URL: postgres://fintrack_user:fintrack_pass@localhost:5433/fintrack_pro_test
+
       - name: Run unit tests
         run: npm run test:unit
 
