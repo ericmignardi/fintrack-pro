@@ -35,8 +35,12 @@ if (process.env.NODE_ENV === "production") {
   const frontendPath = path.resolve(__dirname, "../../frontend/dist");
   app.use(express.static(frontendPath));
   // For all other routes, return index.html
-  app.get("/*", (req, res) => {
-    res.sendFile(path.join(frontendPath, "index.html"));
+  app.use((req, res, next) => {
+    if (!req.path.startsWith("/api")) {
+      res.sendFile(path.join(frontendPath, "index.html"));
+    } else {
+      next();
+    }
   });
 }
 
