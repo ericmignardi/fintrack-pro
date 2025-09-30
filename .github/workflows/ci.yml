@@ -13,6 +13,21 @@ jobs:
       run:
         working-directory: backend
 
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_USER: fintrack_user
+          POSTGRES_PASSWORD: fintrack_pass
+          POSTGRES_DB: fintrack_pro_test
+        ports:
+          - 5433:5432
+        options: >-
+          --health-cmd "pg_isready -U fintrack_user -d fintrack_pro_test"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -34,6 +49,7 @@ jobs:
         env:
           NODE_ENV: test
           ENV_PATH: .env.test
+          DATABASE_URL: postgres://fintrack_user:fintrack_pass@localhost:5433/fintrack_pro_test
         run: npm run test:integration
 
   frontend-build:
