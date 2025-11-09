@@ -32,11 +32,6 @@ fintrack-pro is a modern, full-stack **financial tracking web application** buil
 - **Render.com** — Deployment platform
 - **Docker** — Containerization for development and deployment
 
-## 🔗 Links
-
-- Backend: `https://fintrack-pro-backend.onrender.com`
-- Frontend: `https://fintrack-pro-frontend.onrender.com`
-
 ## 📸 Screenshots
 
 ![Transactions Page](./frontend/src/assets/screenshot1.png)
